@@ -20,12 +20,6 @@
     <!-- checker framework -->
     <org.checkerframework.version>2.1.14</org.checkerframework.version>
     <checker.version>${org.checkerframework.version}</checker.version>
-
-    <!-- spock and groovy -->
-    <groovy-all.version>2.4.15</groovy-all.version>
-    <groovy-eclipse-batch.version>2.4.3-01</groovy-eclipse-batch.version>
-    <groovy-eclipse-compiler.version>2.9.2-04</groovy-eclipse-compiler.version>
-    <spock-core.version>1.2-groovy-2.4</spock-core.version>
   </properties>
 
   <dependencyManagement>
@@ -49,19 +43,6 @@
       <groupId>org.checkerframework</groupId>
       <artifactId>checker</artifactId>
       <scope>provided</scope>
-    </dependency>
-    <!-- for tests -->
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-all</artifactId>
-      <version>${groovy-all.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.spockframework</groupId>
-      <artifactId>spock-core</artifactId>
-      <version>${spock-core.version}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -191,7 +172,7 @@
               <execution>
                 <id>default-compile</id>
                 <configuration>
-                  <compilerId>groovy-eclipse-compiler</compilerId>
+                  <fork>true</fork>
                   <verbose>true</verbose>
                   <annotationProcessorPaths>
                     <path>
@@ -265,26 +246,5 @@
         </plugin>
       </plugins>
     </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <compilerId>groovy-eclipse-compiler</compilerId>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-eclipse-compiler</artifactId>
-            <version>${groovy-eclipse-compiler.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-eclipse-batch</artifactId>
-            <version>${groovy-eclipse-batch.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
   </build>
 </project>
