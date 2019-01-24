@@ -1,42 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+ xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                     http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.mycompany.app</groupId>
   <artifactId>my-app</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>my-app</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
-
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- checker framework -->
     <org.checkerframework.version>2.1.14</org.checkerframework.version>
-    <checker.version>${org.checkerframework.version}</checker.version>
-
-    <!-- spock and groovy -->
-    <groovy-all.version>2.4.15</groovy-all.version>
-    <groovy-eclipse-batch.version>2.4.3-01</groovy-eclipse-batch.version>
-    <groovy-eclipse-compiler.version>2.9.2-04</groovy-eclipse-compiler.version>
-    <spock-core.version>1.2-groovy-2.4</spock-core.version>
   </properties>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>bintray</id>
+      <name>Groovy Bintray</name>
+      <url>https://dl.bintray.com/groovy/maven</url>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.checkerframework</groupId>
         <artifactId>checker</artifactId>
-        <version>${checker.version}</version>
+        <version>${org.checkerframework.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -44,56 +48,109 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
-    <!-- only for IDE and compile -->
     <dependency>
       <groupId>org.checkerframework</groupId>
       <artifactId>checker</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!-- for tests -->
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
-      <version>${groovy-all.version}</version>
+      <version>2.4.16</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.spockframework</groupId>
       <artifactId>spock-core</artifactId>
-      <version>${spock-core.version}</version>
+      <version>1.2-groovy-2.4</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerId>groovy-eclipse-compiler</compilerId>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-eclipse-compiler</artifactId>
+            <version>3.0.0-01</version>
+          </dependency>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-eclipse-batch</artifactId>
+            <version>2.4.16-02</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
-      <!-- This profile will be active only if the executing JVM is a Java 7 JVM. -->
-      <!-- It enhance the checker framework with an annotated JVM Version and a javac supports these annotations. -->
       <id>checkerframework-jdk7</id>
       <activation>
         <activeByDefault>false</activeByDefault>
         <jdk>1.7</jdk>
       </activation>
 
-      <properties>
-        <compiler.version>${org.checkerframework.version}</compiler.version>
-        <jdk7.version>${org.checkerframework.version}</jdk7.version>
-      </properties>
-
-      <!-- These checker framework dependencies are only required to fill the properties via maven-dependencies-plugin. -->
-      <!-- These properties are required to resolve the JAR locations and use as compiler arguments. -->
       <dependencies>
-        <!-- The type annotations compiler - needed for Java 7 -->
         <dependency>
           <groupId>org.checkerframework</groupId>
           <artifactId>compiler</artifactId>
-          <version>${compiler.version}</version>
+          <version>${org.checkerframework.version}</version>
           <scope>provided</scope>
         </dependency>
         <dependency>
           <groupId>org.checkerframework</groupId>
           <artifactId>jdk7</artifactId>
-          <version>${jdk7.version}</version>
+          <version>${org.checkerframework.version}</version>
           <scope>provided</scope>
         </dependency>
       </dependencies>
@@ -121,25 +178,17 @@
     </profile>
 
     <profile>
-      <!-- This profile will be active only if the executing JVM is a Java 7 JVM. -->
-      <!-- It enhance the checker framework with an annotated JVM Version and a javac supports these annotations. -->
       <id>checkerframework-jdk8</id>
       <activation>
         <activeByDefault>false</activeByDefault>
         <jdk>1.8</jdk>
       </activation>
 
-      <properties>
-        <jdk8.version>${org.checkerframework.version}</jdk8.version>
-      </properties>
-
-      <!-- These checker framework dependencies are only required to fill the properties via maven-dependencies-plugin. -->
-      <!-- These properties are required to resolve the JAR locations and use as compiler arguments. -->
       <dependencies>
         <dependency>
           <groupId>org.checkerframework</groupId>
           <artifactId>jdk8</artifactId>
-          <version>${jdk8.version}</version>
+          <version>${org.checkerframework.version}</version>
           <scope>provided</scope>
         </dependency>
       </dependencies>
@@ -164,6 +213,7 @@
         </plugins>
       </build>
     </profile>
+
     <profile>
       <id>checkerframework</id>
       <activation>
@@ -197,15 +247,13 @@
                     <path>
                       <groupId>org.checkerframework</groupId>
                       <artifactId>checker</artifactId>
-                      <version>${checker.version}</version>
+                      <version>${org.checkerframework.version}</version>
                     </path>
                   </annotationProcessorPaths>
                   <annotationProcessors>
                     <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
                   </annotationProcessors>
                   <useIncrementalCompilation>false</useIncrementalCompilation>
-                  <!-- Use the deprecated configuration 'compilerArguments' to make it possible to enhance the -->
-                  <!-- configuration in jdk7 profile without overwriting these settings. -->
                   <compilerArguments>
                     <AprintErrorStack />
                     <AprintAllQualifiers />
@@ -221,70 +269,4 @@
     </profile>
   </profiles>
 
-  <build>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
-      <plugins>
-        <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
-        <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8.2</version>
-        </plugin>
-        <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.7.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <compilerId>groovy-eclipse-compiler</compilerId>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-eclipse-compiler</artifactId>
-            <version>${groovy-eclipse-compiler.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-eclipse-batch</artifactId>
-            <version>${groovy-eclipse-batch.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>
 </project>
