@@ -8,7 +8,7 @@ Run it via
 to ensure the checkerframework profile is used.
 
 Expected output:
-`
+```
 [INFO] -------------------------------------------------------------
 [ERROR] COMPILATION ERROR : 
 [INFO] -------------------------------------------------------------
@@ -35,4 +35,4 @@ Expected output:
 [ERROR] 
 [ERROR] For more information about the errors and possible solutions, please read the following articles:
 [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
-`
+```
